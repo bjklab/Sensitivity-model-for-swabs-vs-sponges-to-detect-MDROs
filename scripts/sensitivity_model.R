@@ -273,7 +273,8 @@ library(patchwork)
 
 
 ((p_binomial_combined_swabs_media_mixed_fitted + theme(legend.position = "none")) /
-  p_binomial_combined_swabs_newmedia_mixed_fitted) %>%
+  p_binomial_combined_swabs_newmedia_mixed_fitted) +
+  plot_layout(heights = c(2,1)) %>%
   identity() -> p_swab_sensitivity_models_combined
 p_swab_sensitivity_models_combined
 
