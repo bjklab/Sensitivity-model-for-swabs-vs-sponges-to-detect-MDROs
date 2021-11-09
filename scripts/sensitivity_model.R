@@ -358,6 +358,8 @@ m_binomial_swab_media_crossmixed_unknown
 m_binomial_swab_media_crossmixed_fitted %>%
   bind_rows(m_binomial_swab_media_crossmixed_unknown) %>%
   mutate(media = factor(media, levels = c("CDIFF", "CRE", "CRPA", "ESBL", "MRSA", "VRE", "New Media"))) %>%
+  mutate(swab = case_when(swab == "sponge" ~ "Sponge<br>Swab",
+                          swab == "eswab" ~ "E-Swab")) %>%
   identity() -> m_binomial_swab_media_crossmixed_plot
 
 
@@ -371,16 +373,17 @@ m_binomial_swab_media_crossmixed_plot %>%
   scale_x_continuous(limits = c(0,1)) +
   theme_bw() +
   theme(strip.background = element_blank(),
-        axis.text = element_text(color = "black"),
+        axis.text.x = ggtext::element_markdown(color = "black"),
+        axis.text.y = ggtext::element_markdown(color = "black"),
         axis.title.x = ggtext::element_markdown(color = "black"),
         axis.title.y = ggtext::element_markdown(color = "black"),
         legend.position = "bottom",
         plot.title.position = "plot") +
   guides(fill = guide_legend(nrow = 1)) +
-  labs(x = "Expected Sponge Swab Sensitivity<br>(posterior median and 95% credible interval)",
+  labs(x = "Expected Sensitivity<br>(posterior median and 95% credible interval)",
        y = "",
        fill = "Media",
-       title = "Sponge Swab Sensitivity for MDRO Detection in the Healthcare Environment",
+       title = "Sensitivity for MDRO Detection in the Healthcare Environment",
        subtitle = "Estimated from 2460 Hospital Surface Cultures") -> p_binomial_swab_media_crossmixed_fitted
 p_binomial_swab_media_crossmixed_fitted
 
@@ -394,29 +397,40 @@ m_binomial_swab_media_crossmixed_plot %>%
   scale_x_continuous(limits = c(0,1)) +
   theme_bw() +
   theme(strip.background = element_blank(),
-        axis.text = element_text(color = "black"),
+        axis.text.x = ggtext::element_markdown(color = "black"),
+        axis.text.y = ggtext::element_markdown(color = "black"),
         axis.title.x = ggtext::element_markdown(color = "black"),
         axis.title.y = ggtext::element_markdown(color = "black"),
         legend.position = "bottom",
         plot.title.position = "plot") +
   guides(fill = guide_legend(nrow = 1)) +
-  labs(x = "Expected Sponge Swab Sensitivity<br>(posterior median and 95% credible interval)",
+  labs(x = "Expected Sensitivity Over All Media<br>(posterior median and 95% credible interval)",
        y = ""#,
        #fill = "Media",
-       #title = "Sponge Swab Sensitivity for MDRO Detection in the Healthcare Environment",
+       #title = "Sensitivity for MDRO Detection in the Healthcare Environment",
        #subtitle = "Estimated from 2460 Hospital Surface Cultures"
        ) -> p_binomial_swab_newmedia_crossmixed_fitted
 p_binomial_swab_newmedia_crossmixed_fitted
 
 
+library(patchwork)
 
 
-p_binomial_swab_media_crossmixed_fitted %>%
-  ggsave(plot = ., filename = "./figs/p_binomial_swab_media_crossmixed_fitted.pdf", height = 6, width = 8, units = "in")
-p_binomial_swab_media_crossmixed_fitted %>%
-  ggsave(plot = ., filename = "./figs/p_binomial_swab_media_crossmixed_fitted.svg", height = 6, width = 8, units = "in")
-p_binomial_swab_media_crossmixed_fitted %>%
-  ggsave(plot = ., filename = "./figs/p_binomial_swab_media_crossmixed_fitted.png", height = 6, width = 8, units = "in", dpi = 600)
+((p_binomial_swab_media_crossmixed_fitted + theme(legend.position = "none")) /
+    p_binomial_swab_newmedia_crossmixed_fitted) +
+  plot_layout(heights = c(2,1)) %>%
+  identity() -> p_swab_sensitivity_models_together
+p_swab_sensitivity_models_together
+
+
+
+
+p_swab_sensitivity_models_together %>%
+  ggsave(plot = ., filename = "./figs/p_swab_sensitivity_models_together.pdf", height = 6, width = 8, units = "in")
+p_swab_sensitivity_models_together %>%
+  ggsave(plot = ., filename = "./figs/p_swab_sensitivity_models_together.svg", height = 6, width = 8, units = "in")
+p_swab_sensitivity_models_together %>%
+  ggsave(plot = ., filename = "./figs/p_swab_sensitivity_models_together.png", height = 6, width = 8, units = "in", dpi = 600)
 
 
 
