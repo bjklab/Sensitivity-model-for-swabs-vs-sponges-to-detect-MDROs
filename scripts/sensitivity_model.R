@@ -349,7 +349,7 @@ m_binomial_swab_media_crossmixed$data %>%
          media = "New Media",
          swab = unique(swab)
   ) %>%
-  add_epred_draws(m_binomial_swab_media_crossmixed, allow_new_levels = TRUE) %>%
+  add_epred_draws(m_binomial_swab_media_crossmixed, allow_new_levels = TRUE, sample_new_levels = "uncertainty", re_formula = NULL) %>%
   ungroup() %>%
   identity() -> m_binomial_swab_media_crossmixed_unknown
 m_binomial_swab_media_crossmixed_unknown
@@ -404,7 +404,7 @@ m_binomial_swab_media_crossmixed_plot %>%
         legend.position = "bottom",
         plot.title.position = "plot") +
   guides(fill = guide_legend(nrow = 1)) +
-  labs(x = "Expected Sensitivity Over All Media<br>(posterior median and 95% credible interval)",
+  labs(x = "Expected Sensitivity Over Any Media<br>(posterior median and 95% credible interval)",
        y = ""#,
        #fill = "Media",
        #title = "Sensitivity for MDRO Detection in the Healthcare Environment",
