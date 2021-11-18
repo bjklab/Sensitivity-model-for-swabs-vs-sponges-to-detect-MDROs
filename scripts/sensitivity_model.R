@@ -95,7 +95,7 @@ m_binomial_sponge_media_mixed_unknown
 
 m_binomial_sponge_media_mixed_fitted %>%
   bind_rows(m_binomial_sponge_media_mixed_unknown) %>%
-  mutate(media = factor(media, levels = c("CDIFF", "CRE", "CRPA", "ESBL", "MRSA", "VRE", "New Media"))) %>%
+  mutate(media = factor(media, levels = c("CDIFF", "CRE", "KPC", "ESBL", "MRSA", "VRE", "New Media"))) %>%
   identity() -> m_binomial_sponge_media_mixed_plot
   
 
@@ -184,7 +184,7 @@ m_binomial_eswab_media_mixed_unknown
 
 m_binomial_eswab_media_mixed_fitted %>%
   bind_rows(m_binomial_eswab_media_mixed_unknown) %>%
-  mutate(media = factor(media, levels = c("CDIFF", "CRE", "CRPA", "ESBL", "MRSA", "VRE", "New Media"))) %>%
+  mutate(media = factor(media, levels = c("CDIFF", "CRE", "KPC", "ESBL", "MRSA", "VRE", "New Media"))) %>%
   identity() -> m_binomial_eswab_media_mixed_plot
 
 
@@ -343,6 +343,7 @@ m_binomial_swab_media_crossmixed$data %>%
 m_binomial_swab_media_crossmixed_fitted
 
 
+
 m_binomial_swab_media_crossmixed$data %>%
   as_tibble() %>%
   expand(either_positive = TRUE,
@@ -357,7 +358,7 @@ m_binomial_swab_media_crossmixed_unknown
 
 m_binomial_swab_media_crossmixed_fitted %>%
   bind_rows(m_binomial_swab_media_crossmixed_unknown) %>%
-  mutate(media = factor(media, levels = c("CDIFF", "CRE", "CRPA", "ESBL", "MRSA", "VRE", "New Media"))) %>%
+  mutate(media = factor(media, levels = c("CDIFF", "CRE", "KPC", "ESBL", "MRSA", "VRE", "New Media"))) %>%
   mutate(swab = case_when(swab == "sponge" ~ "Sponge<br>Swab",
                           swab == "eswab" ~ "E-Swab")) %>%
   identity() -> m_binomial_swab_media_crossmixed_plot
@@ -382,9 +383,10 @@ m_binomial_swab_media_crossmixed_plot %>%
   guides(fill = guide_legend(nrow = 1)) +
   labs(x = "Expected Sensitivity<br>(posterior median and 95% credible interval)",
        y = "",
-       fill = "Media",
-       title = "Sensitivity for MDRO Detection in the Healthcare Environment",
-       subtitle = "Estimated from 2460 Hospital Surface Cultures") -> p_binomial_swab_media_crossmixed_fitted
+       fill = "Media"#,
+       #title = "Sensitivity for MDRO Detection in the Healthcare Environment",
+       #subtitle = "Estimated from 2460 Hospital Surface Cultures"
+       ) -> p_binomial_swab_media_crossmixed_fitted
 p_binomial_swab_media_crossmixed_fitted
 
 
@@ -419,6 +421,7 @@ library(patchwork)
 ((p_binomial_swab_media_crossmixed_fitted + theme(legend.position = "none")) /
     p_binomial_swab_newmedia_crossmixed_fitted) +
   plot_layout(heights = c(2,1)) %>%
+  plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL) %>%
   identity() -> p_swab_sensitivity_models_together
 p_swab_sensitivity_models_together
 
