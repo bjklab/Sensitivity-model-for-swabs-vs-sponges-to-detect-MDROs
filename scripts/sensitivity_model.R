@@ -202,10 +202,10 @@ m_binomial_eswab_media_mixed_plot %>%
         legend.position = "bottom",
         plot.title.position = "plot") +
   guides(fill = guide_legend(nrow = 1)) +
-  labs(x = "Expected E-Swab Sensitivity<br>(posterior median and 95% credible interval)",
+  labs(x = "Expected Flocked Swab Sensitivity<br>(posterior median and 95% credible interval)",
        y = "",
        fill = "Media",
-       title = "E-Swab Sensitivity for MDRO Detection in the Healthcare Environment",
+       title = "Flocked Swab Sensitivity for MDRO Detection in the Healthcare Environment",
        subtitle = "Estimated from 2460 Hospital Surface Cultures") -> p_binomial_eswab_media_mixed_fitted
 p_binomial_eswab_media_mixed_fitted
 
@@ -221,7 +221,7 @@ p_binomial_eswab_media_mixed_fitted %>%
 
 #' combined plots
 m_binomial_eswab_media_mixed_plot %>%
-  mutate(swab = "E-Swab") %>%
+  mutate(swab = "Flocked Swab") %>%
   bind_rows(mutate(m_binomial_sponge_media_mixed_plot, swab = "Sponge Swab")) %>%
   filter(media != "New Media") %>%
   ggplot(data = ., aes(y = swab, x = .epred, fill = media)) +
@@ -247,7 +247,7 @@ p_binomial_combined_swabs_media_mixed_fitted
 
 
 m_binomial_eswab_media_mixed_plot %>%
-  mutate(swab = "E-Swab") %>%
+  mutate(swab = "Flocked Swab") %>%
   bind_rows(mutate(m_binomial_sponge_media_mixed_plot, swab = "Sponge Swab")) %>%
   filter(media == "New Media") %>%
   ggplot(data = ., aes(y = swab, x = .epred)) +
@@ -359,8 +359,8 @@ m_binomial_swab_media_crossmixed_unknown
 m_binomial_swab_media_crossmixed_fitted %>%
   bind_rows(m_binomial_swab_media_crossmixed_unknown) %>%
   mutate(media = factor(media, levels = c("CDIFF", "CRE", "KPC", "ESBL", "MRSA", "VRE", "New Media"))) %>%
-  mutate(swab = case_when(swab == "sponge" ~ "Sponge<br>Swab",
-                          swab == "eswab" ~ "E-Swab")) %>%
+  mutate(swab = case_when(swab == "sponge" ~ "Sponge<br>Stick",
+                          swab == "eswab" ~ "Flocked<br>Swab")) %>%
   identity() -> m_binomial_swab_media_crossmixed_plot
 
 
@@ -420,8 +420,9 @@ library(patchwork)
 
 ((p_binomial_swab_media_crossmixed_fitted + theme(legend.position = "none")) /
     p_binomial_swab_newmedia_crossmixed_fitted) +
-  plot_layout(heights = c(2,1)) %>%
-  plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL) %>%
+  plot_layout(heights = c(2,1)) |> 
+  #plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL) %>%
+  patchwork::plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL) |> 
   identity() -> p_swab_sensitivity_models_together
 p_swab_sensitivity_models_together
 
@@ -437,5 +438,38 @@ p_swab_sensitivity_models_together %>%
 
 
 
+
+#' model contrasts for Results section
+#' 
+#' 
+
+m_binomial_swab_media_crossmixed_fitted |> 
+  #count(swab)
+  group_by(media) |> 
+  pivot_wider(id_cols = c(media, .draw), names_from = swab, values_from = .epred) |> 
+  mutate(contrast_s_less_e = sponge - eswab) |>
+  ungroup() |> 
+  identity() -> m_binomial_swab_media_crossmixed_fitted_contrasts
+m_binomial_swab_media_crossmixed_fitted_contrasts
+
+m_binomial_swab_media_crossmixed_plot |> 
+  #count(swab)
+  group_by(media) |> 
+  pivot_wider(id_cols = c(media, .draw), names_from = swab, values_from = .epred) |> 
+  mutate(contrast_s_less_e = `Sponge<br>Stick` - `Flocked<br>Swab`) |>
+  ungroup() |> 
+  identity() -> m_binomial_swab_media_crossmixed_fitted_contrasts
+m_binomial_swab_media_crossmixed_fitted_contrasts
+
+m_binomial_swab_media_crossmixed_fitted_contrasts |> 
+  group_by(media) |> 
+  tidybayes::median_qi(contrast_s_less_e, .width = 0.95) |> 
+  mutate(text = glue::glue("for {media}, sponge stick was {round(contrast_s_less_e,3)*100}% (95%CrI {round(.lower,3)*100}% to {round(.upper,3)*100}%) more sensitive than flocked swab;")) |> 
+  identity() -> m_binomial_swab_media_crossmixed_fitted_contrasts_summary
+m_binomial_swab_media_crossmixed_fitted_contrasts_summary |> 
+  pull(text)
+
+m_binomial_swab_media_crossmixed_fitted_contrasts_summary |> 
+  write_csv("tabs/m_binomial_swab_media_crossmixed_fitted_contrasts_summary.csv")
 
 

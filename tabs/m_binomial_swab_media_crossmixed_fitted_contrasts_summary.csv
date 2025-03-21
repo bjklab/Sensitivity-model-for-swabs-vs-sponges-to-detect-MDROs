@@ -1,0 +1,8 @@
+media,contrast_s_less_e,.lower,.upper,.width,.point,.interval,text
+CDIFF,0.24636632107115813,0.13541596202128825,0.3580793653714789,0.95,median,qi,"for CDIFF, sponge stick was 24.6% (95%CrI 13.5% to 35.8%) more sensitive than flocked swab;"
+CRE,0.18273170731059696,0.09941044654321395,0.277588676022164,0.95,median,qi,"for CRE, sponge stick was 18.3% (95%CrI 9.9% to 27.8%) more sensitive than flocked swab;"
+KPC,0.20497498689821403,0.09042504139133592,0.32784730362458825,0.95,median,qi,"for KPC, sponge stick was 20.5% (95%CrI 9% to 32.8%) more sensitive than flocked swab;"
+ESBL,0.22331906378911726,0.12258780099502384,0.3224705934659259,0.95,median,qi,"for ESBL, sponge stick was 22.3% (95%CrI 12.3% to 32.2%) more sensitive than flocked swab;"
+MRSA,0.2311840079847708,0.12535688898775868,0.34145996088318664,0.95,median,qi,"for MRSA, sponge stick was 23.1% (95%CrI 12.5% to 34.1%) more sensitive than flocked swab;"
+VRE,0.22653384974827095,0.1259555481292105,0.32601182952422125,0.95,median,qi,"for VRE, sponge stick was 22.7% (95%CrI 12.6% to 32.6%) more sensitive than flocked swab;"
+New Media,0.21811491129847793,0.10912690978775227,0.33459419606143187,0.95,median,qi,"for New Media, sponge stick was 21.8% (95%CrI 10.9% to 33.5%) more sensitive than flocked swab;"
