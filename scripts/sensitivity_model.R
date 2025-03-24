@@ -422,7 +422,7 @@ library(patchwork)
     p_binomial_swab_newmedia_crossmixed_fitted) +
   plot_layout(heights = c(2,1)) |> 
   #plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL) %>%
-  patchwork::plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL) |> 
+  patchwork::plot_annotation(tag_levels = "A", title = NULL, subtitle = NULL, caption = NULL) |> 
   identity() -> p_swab_sensitivity_models_together
 p_swab_sensitivity_models_together
 
